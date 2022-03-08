@@ -5,7 +5,7 @@ import Loading from './Loading';
 
 class Login extends Component {
   render() {
-    const { handleLoginName, onButtonClick, login, name, ableLogin, load } = this.props;
+    const { handleInputLogin, onButtonClick, login, name, ableLogin, load } = this.props;
     return (
       <>
         {load
@@ -18,7 +18,7 @@ class Login extends Component {
                   value={ name }
                   type="text"
                   data-testid="login-name-input"
-                  onChange={ handleLoginName }
+                  onChange={ handleInputLogin }
                 />
                 <button
                   type="button"
@@ -42,7 +42,7 @@ Login.propTypes = {
   login: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
   ableLogin: PropTypes.bool.isRequired,
-  handleLoginName: PropTypes.func.isRequired,
+  handleInputLogin: PropTypes.func.isRequired,
   load: PropTypes.bool.isRequired,
 };
 

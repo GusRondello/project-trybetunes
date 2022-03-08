@@ -20,14 +20,14 @@ class App extends Component {
     };
   }
 
-   handleLoginName = ({ target }) => {
-     const { value } = target;
-     const minName = 3;
-     this.setState({
-       name: value,
-       ableLogin: value.length < minName,
-     });
-   } // Com ajuda da Vivi e do Vitu na mentoria consegui descobrir meu erro do async await e como utilizar para o Loading.js
+  handleInputLogin = ({ target }) => {
+    const { value } = target;
+    const minName = 3;
+    this.setState({
+      name: value,
+      ableLogin: value.length < minName,
+    });
+  } // Com ajuda da Vivi e do Vitu na mentoria consegui descobrir meu erro do async await e como utilizar para o Loading.js
 
   onButtonClick = async (event) => {
     event.preventDefault();
@@ -41,21 +41,23 @@ class App extends Component {
   }
 
   render() {
-    const { login, name, ableLogin, load } = this.state;
+    const { login, name, ableLogin, load, user } = this.state;
     return (
       <Switch>
-        <Route exact path="/profile/edit" component={ ProfileEdit } />
+        <Route path="/profile/edit" component={ ProfileEdit } />
         <Route path="/profile" component={ Profile } />
         <Route path="/favorites" component={ Favorites } />
+        <Route exact path="/album/:id" component={ Album } />
         <Route
-          exact
-          path="/album/:id"
+          path="/search"
           render={ (props) => (
-            <Album
+            <Search
               { ...props }
-            />) }
+              load={ load }
+              user={ user }
+            />
+          ) }
         />
-        <Route path="/search" component={ Search } />
         <Route
           exact
           path="/"
@@ -68,7 +70,7 @@ class App extends Component {
                 login={ login }
                 ableLogin={ ableLogin }
                 onButtonClick={ this.onButtonClick }
-                handleLoginName={ this.handleLoginName }
+                handleInputLogin={ this.handleInputLogin }
               />
             )) }
         />
