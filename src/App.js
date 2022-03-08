@@ -17,6 +17,8 @@ class App extends Component {
       load: false,
       login: false,
       ableLogin: true,
+      searchArtist: '',
+      ableSearch: true,
     };
   }
 
@@ -29,7 +31,7 @@ class App extends Component {
     });
   } // Com ajuda da Vivi e do Vitu na mentoria consegui descobrir meu erro do async await e como utilizar para o Loading.js
 
-  onButtonClick = async (event) => {
+  onLoginBtnClick = async (event) => {
     event.preventDefault();
     const { name } = this.state;
     this.setState({ load: true });
@@ -40,8 +42,22 @@ class App extends Component {
     });
   }
 
+  handleInputSearch = ({ target }) => {
+    const { value } = target;
+    const minValue = 2;
+    this.setState({
+      searchArtist: value,
+      ableSearch: value.length < minValue,
+    });
+  }
+
   render() {
-    const { login, name, ableLogin, load, user } = this.state;
+    const { login,
+      name,
+      ableLogin,
+      load,
+      ableSearch,
+      searchArtist } = this.state;
     return (
       <Switch>
         <Route path="/profile/edit" component={ ProfileEdit } />
@@ -53,8 +69,9 @@ class App extends Component {
           render={ (props) => (
             <Search
               { ...props }
-              load={ load }
-              user={ user }
+              ableSearch={ ableSearch }
+              searchArtist={ searchArtist }
+              handleInputSearch={ this.handleInputSearch }
             />
           ) }
         />
@@ -69,7 +86,7 @@ class App extends Component {
                 name={ name }
                 login={ login }
                 ableLogin={ ableLogin }
-                onButtonClick={ this.onButtonClick }
+                onLoginBtnClick={ this.onLoginBtnClick }
                 handleInputLogin={ this.handleInputLogin }
               />
             )) }

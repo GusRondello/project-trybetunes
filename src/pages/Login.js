@@ -5,7 +5,12 @@ import Loading from './Loading';
 
 class Login extends Component {
   render() {
-    const { handleInputLogin, onButtonClick, login, name, ableLogin, load } = this.props;
+    const { handleInputLogin,
+      onLoginBtnClick,
+      login,
+      name,
+      ableLogin,
+      load } = this.props;
     return (
       <>
         {load
@@ -23,7 +28,7 @@ class Login extends Component {
                 <button
                   type="button"
                   data-testid="login-submit-button"
-                  onClick={ onButtonClick }
+                  onClick={ onLoginBtnClick }
                   disabled={ ableLogin }
                 >
                   Entrar
@@ -38,7 +43,7 @@ class Login extends Component {
 }
 
 Login.propTypes = {
-  onButtonClick: PropTypes.func.isRequired,
+  onLoginBtnClick: PropTypes.func.isRequired,
   login: PropTypes.bool.isRequired,
   name: PropTypes.string.isRequired,
   ableLogin: PropTypes.bool.isRequired,
