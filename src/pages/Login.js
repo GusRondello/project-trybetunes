@@ -1,16 +1,45 @@
-import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import Loading from './Loading';
+import Loading from '../components/Loading';
+import { createUser } from '../services/userAPI';
 
 class Login extends Component {
+  constructor() {
+    super();
+    this.state = {
+      name: '',
+      load: false,
+      login: false,
+      ableLogin: true,
+    };
+  }
+
+  handleInputLogin = ({ target }) => {
+    const { value } = target;
+    const minName = 3;
+    this.setState({
+      name: value,
+      ableLogin: value.length < minName,
+    });
+  } // Com ajuda da Vivi e do Vitu na mentoria consegui descobrir meu erro do async await e como utilizar para o Loading.js
+
+  onLoginBtnClick = async (event) => {
+    event.preventDefault();
+    const { name } = this.state;
+    this.setState({ load: true });
+    await createUser({ name });
+    this.setState({
+      load: false,
+      login: true,
+    });
+  }
+
   render() {
-    const { handleInputLogin,
-      onLoginBtnClick,
+    const {
       login,
       name,
       ableLogin,
-      load } = this.props;
+      load } = this.state;
     return (
       <>
         {load
@@ -23,12 +52,12 @@ class Login extends Component {
                   value={ name }
                   type="text"
                   data-testid="login-name-input"
-                  onChange={ handleInputLogin }
+                  onChange={ this.handleInputLogin }
                 />
                 <button
                   type="button"
                   data-testid="login-submit-button"
-                  onClick={ onLoginBtnClick }
+                  onClick={ this.onLoginBtnClick }
                   disabled={ ableLogin }
                 >
                   Entrar
@@ -41,14 +70,5 @@ class Login extends Component {
     );
   }
 }
-
-Login.propTypes = {
-  onLoginBtnClick: PropTypes.func.isRequired,
-  login: PropTypes.bool.isRequired,
-  name: PropTypes.string.isRequired,
-  ableLogin: PropTypes.bool.isRequired,
-  handleInputLogin: PropTypes.func.isRequired,
-  load: PropTypes.bool.isRequired,
-};
 
 export default Login;
