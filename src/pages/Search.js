@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Artist from '../components/Artist';
+import AlbumCard from '../components/AlbumCard';
 import Header from '../components/Header';
 import searchAlbumsAPI from '../services/searchAlbumsAPI';
 
@@ -72,7 +72,7 @@ class Search extends Component {
             : <span>Nenhum álbum foi encontrado</span>}
           {artistAlbuns.length > 0
           && artistAlbuns.map((artista) => (
-            <Artist
+            <AlbumCard
               key={ artista.artistId }
               artistAlbuns={ artista }
             />

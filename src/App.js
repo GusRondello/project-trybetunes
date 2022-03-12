@@ -15,7 +15,11 @@ class App extends Component {
         <Route path="/profile/edit" component={ ProfileEdit } />
         <Route path="/profile" component={ Profile } />
         <Route path="/favorites" component={ Favorites } />
-        <Route exact path="/album/:id" component={ Album } />
+        <Route
+          exact
+          path="/album/:id"
+          render={ (props) => (<Album { ...props } />) }
+        />
         <Route path="/search" component={ Search } />
         <Route
           exact
