@@ -3,8 +3,8 @@ import React, { Component } from 'react';
 
 class MusicCard extends Component {
   render() {
-    const { musica } = this.props;
-    const { trackName, previewUrl, trackNumber } = musica;
+    const { musica, favoriteClick, favoriteList } = this.props;
+    const { trackName, previewUrl, trackNumber, trackId } = musica;
     return (
       <div>
         <span>{`${trackNumber} - `}</span>
@@ -15,6 +15,16 @@ class MusicCard extends Component {
           {' '}
           <code>audio</code>
         </audio>
+        <label htmlFor={ trackId }>
+          <input
+            type="checkbox"
+            id={ trackId }
+            data-testid={ `checkbox-music-${trackId}` }
+            checked={ favoriteList.includes(trackId) }
+            onChange={ favoriteClick }
+          />
+          Favorita
+        </label>
       </div>
     );
   }
@@ -22,6 +32,8 @@ class MusicCard extends Component {
 
 MusicCard.propTypes = {
   musica: PropTypes.objectOf(PropTypes.any).isRequired,
+  favoriteClick: PropTypes.func.isRequired,
+  favoriteList: PropTypes.arrayOf(PropTypes.number).isRequired,
 };
 
 export default MusicCard;

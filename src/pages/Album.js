@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Header from '../components/Header';
+import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
+import { addSong } from '../services/favoriteSongsAPI';
 import getMusics from '../services/musicsAPI';
 
 class Album extends React.Component {
@@ -12,6 +14,8 @@ class Album extends React.Component {
       collectionName: '',
       albumCover: '',
       musics: [],
+      loading: false,
+      favoriteList: [],
     };
   }
 
@@ -28,8 +32,31 @@ class Album extends React.Component {
      });
    }
 
+   handleFavoriteSongs = async ({ target }) => {
+     const { id } = target;
+     const { musics, favoriteList } = this.state;
+     const idNumber = Number(id); // Luá me auxiliou a identificar que meu ID vinha do target como string e estava quebrando meu código por isso.
+     this.setState({
+       loading: true,
+     });
+     const findSong = musics.find((musicObj) => musicObj.trackId === idNumber);
+     await addSong(findSong);
+     const findIdInArray = favoriteList.filter((element) => element !== idNumber);
+     this.setState({
+       loading: false,
+       favoriteList: favoriteList.includes(idNumber)
+         ? findIdInArray
+         : [...favoriteList, idNumber],
+     });
+   }
+
    render() {
-     const { artistName, collectionName, albumCover, musics } = this.state;
+     const { artistName,
+       collectionName,
+       albumCover,
+       musics,
+       loading,
+       favoriteList } = this.state;
      return (
        <div data-testid="page-album">
          <Header />
@@ -37,13 +64,16 @@ class Album extends React.Component {
          <h1 data-testid="album-name">{collectionName}</h1>
          <h2 data-testid="artist-name">{artistName}</h2>
          <div>
-           {musics.map((musica) => (
-             <MusicCard
-               key={ musica.trackId }
-               musica={ musica }
-             />
-           ))}
-
+           {loading ? <Loading />
+             : musics.map((musica) => (
+               <MusicCard
+                 key={ musica.trackId }
+                 musica={ musica }
+                 favoriteClick={ this.handleFavoriteSongs }
+                 loading={ loading }
+                 favoriteList={ favoriteList }
+               />
+             ))}
          </div>
        </div>
      );
