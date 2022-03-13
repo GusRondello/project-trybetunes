@@ -3,7 +3,7 @@ import React from 'react';
 import Header from '../components/Header';
 import Loading from '../components/Loading';
 import MusicCard from '../components/MusicCard';
-import { addSong } from '../services/favoriteSongsAPI';
+import { addSong, getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
 import getMusics from '../services/musicsAPI';
 
 class Album extends React.Component {
@@ -24,11 +24,13 @@ class Album extends React.Component {
      const { id } = match.params;
      const albumInfo = await getMusics(id);
      const albumMusic = albumInfo.filter((_element, index) => index > 0);
+     const getSongsInStorage = await getFavoriteSongs();
      this.setState({
        artistName: albumInfo[0].artistName,
        collectionName: albumInfo[0].collectionName,
        albumCover: albumInfo[0].artworkUrl100,
        musics: albumMusic,
+       favoriteList: getSongsInStorage,
      });
    }
 
@@ -36,17 +38,19 @@ class Album extends React.Component {
      const { id } = target;
      const { musics, favoriteList } = this.state;
      const idNumber = Number(id); // Luá me auxiliou a identificar que meu ID vinha do target como string e estava quebrando meu código por isso.
+     const matchIdSong = musics.find((musica) => musica.trackId === idNumber);
      this.setState({
        loading: true,
      });
-     const findSong = musics.find((musicObj) => musicObj.trackId === idNumber);
-     await addSong(findSong);
-     const findIdInArray = favoriteList.filter((element) => element !== idNumber);
+     if (favoriteList.some((musica) => musica.trackId === idNumber)) {
+       await removeSong(matchIdSong);
+     } else {
+       await addSong(matchIdSong);
+     }
+     const getSongsInStorage = await getFavoriteSongs();
      this.setState({
        loading: false,
-       favoriteList: favoriteList.includes(idNumber)
-         ? findIdInArray
-         : [...favoriteList, idNumber],
+       favoriteList: getSongsInStorage,
      });
    }
 
